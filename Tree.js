@@ -2,8 +2,16 @@ import Node from "./childNode.js";
 
 export default class Tree {
   constructor(array) {
-    array = this.preproccessArray(array);
+    array = this._preproccessArray(array);
     this.root = this.buildTree(array, 0, array.length - 1); // need to reference root to access all other nodes.
+  }
+
+  _preproccessArray(array) {
+    array = [...new Set(array)];
+    array.sort((a, b) => {
+      return a - b;
+    });
+    return array;
   }
 
   prettyPrint(node, prefix = "", isLeft = true) {
@@ -11,20 +19,16 @@ export default class Tree {
       return;
     }
     if (node.right !== null) {
-      this.prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+      this.prettyPrint(
+        node.right,
+        `${prefix}${isLeft ? "│   " : "    "}`,
+        false
+      );
     }
     console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
     if (node.left !== null) {
       this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
-  }
-
-  preproccessArray(array) {
-    array = [...new Set(array)];
-    array.sort((a, b) => {
-      return a - b;
-    });
-    return array;
   }
 
   buildTree(array, start, end) {
@@ -41,5 +45,33 @@ export default class Tree {
     root.right = this.buildTree(array, midIndex + 1, end);
 
     return root;
+  }
+
+  insert(value) {
+    // Inserts node with `value` in binary tree
+    const newNode = new Node(value);
+    let currNode = this.root;
+
+    while (true) {
+      if (value <= currNode.data) {
+        // if the left side is empty, add it
+        if (!currNode.left) {
+          currNode.left = newNode;
+          return;
+        }
+        // otherwise, continue left
+        currNode = currNode.left;
+      } else {
+        if (!currNode.right) {
+          currNode.right = newNode;
+          return;
+        }
+        currNode = currNode.right;
+      }
+    }
+  }
+
+  deleteItem(value) {
+    // Deletes `value` in binary tree
   }
 }
