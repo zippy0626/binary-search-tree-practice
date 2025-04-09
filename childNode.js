@@ -1,6 +1,6 @@
 export default class Node {
-  constructor(data, leftChild, rightChild) {
-    this.data = data;
+  constructor(value, leftChild, rightChild) {
+    this.value = value;
     this.left = leftChild;
     this.right = rightChild;
   }
