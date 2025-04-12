@@ -2,11 +2,11 @@ import Node from "./childNode.js";
 
 export default class Tree {
   constructor(array) {
-    array = this._preproccessArray(array);
+    array = this._preprocessArray(array);
     this.root = this.buildTree(array, 0, array.length - 1); // need to reference root to access all other nodes.
   }
 
-  _preproccessArray(array) {
+  _preprocessArray(array) {
     array = [...new Set(array)];
     array.sort((a, b) => {
       return a - b;
@@ -14,7 +14,7 @@ export default class Tree {
     return array;
   }
 
-  prettyPrint(node, prefix = "", isLeft = true) {
+  prettyPrint(node = this.root, prefix = "", isLeft = true) {
     if (node === null) {
       return;
     }
@@ -37,9 +37,8 @@ export default class Tree {
     // Don’t forget to sort and remove duplicates!
     // The buildTree function should return the level-0 root node.
 
-    // [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345]
     if (start > end) return null;
-    const midIndex = Math.ceil((start + end) / 2);
+    const midIndex = Math.floor((start + end) / 2);
     const root = new Node(array[midIndex]);
     root.left = this.buildTree(array, start, midIndex - 1);
     root.right = this.buildTree(array, midIndex + 1, end);
@@ -50,9 +49,13 @@ export default class Tree {
   insert(value) {
     // Inserts node with `value` in binary tree
     const newNode = new Node(value);
+    if (!this.root) {
+      this.root = newNode;
+      return;
+    }
     let currNode = this.root;
 
-    while (true) {
+    while (currNode) {
       if (value <= currNode.data) {
         // if the left side is empty, add it
         if (!currNode.left) {
@@ -73,5 +76,20 @@ export default class Tree {
 
   deleteItem(value) {
     // Deletes `value` in binary tree
+    // del leaf, del node with one child, del node with two childs
+
+    let currNode = this.root;
+    // Parent node for changing pointer (deleting)
+    let parentNode;
+
+    while (currNode) {
+      if (value < currNode.data) {
+
+      } else if (value > currNode.data) {
+
+      } else if (value === currNode.data) {
+
+      }
+    }
   }
 }
