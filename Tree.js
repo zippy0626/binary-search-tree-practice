@@ -78,18 +78,59 @@ export default class Tree {
     // Deletes `value` in binary tree
     // del leaf, del node with one child, del node with two childs
 
+    if (!value) {
+      throw new Error("deleteItem value not provided");
+    }
+
     let currNode = this.root;
-    // Parent node for changing pointer (deleting)
-    let parentNode;
+    let parentNode; // change parent's pointer
 
     while (currNode) {
+      if (value === currNode.data) {
+        // check root once
+        if (!parentNode) {
+          this.root = null;
+          return;
+        }
+        // parentNode has only one child
+        if (
+          (parentNode.left && !parentNode.right) ||
+          (parentNode.right && !parentNode.left)
+        ) {
+          if (parentNode.right === currNode) {
+            parentNode.data = currNode.data;
+            parentNode.right = null;
+            return;
+          }
+          if (parentNode.left === currNode) {
+            parentNode.data = currNode.data;
+            parentNode.left = null;
+            return;
+          }
+        }
+        // currNode is a leaf node
+        if (!currNode.left && !currNode.right) {
+          if (parentNode.right === currNode) {
+            parentNode.right = null;
+            return;
+          }
+          if (parentNode.left === currNode) {
+            parentNode.left = null;
+            return;
+          }
+        }
+      }
+
+      // continue traversing
+      parentNode = currNode;
       if (value < currNode.data) {
-
+        currNode = currNode.left;
       } else if (value > currNode.data) {
-
-      } else if (value === currNode.data) {
-
+        currNode = currNode.right;
       }
     }
+
+    console.log(`Value: ${value} not found in binary tree.`);
+    return null;
   }
 }
