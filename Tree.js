@@ -78,47 +78,57 @@ export default class Tree {
     // Deletes `value` in binary tree
     // del leaf, del node with one child, del node with two childs
 
-    if (!value) {
+    if (value === undefined || value === null) {
       throw new Error("deleteItem value not provided");
     }
 
     let currNode = this.root;
-    let parentNode; // change parent's pointer
+    let parentNode;
 
     while (currNode) {
       if (value === currNode.data) {
-        // check root once
-        if (!parentNode) {
-          this.root = null;
-          return;
-        }
-        // parentNode has only one child
-        if (
-          (parentNode.left && !parentNode.right) ||
-          (parentNode.right && !parentNode.left)
-        ) {
-          if (parentNode.right === currNode) {
-            parentNode.data = currNode.data;
-            parentNode.right = null;
+        // deal with root level : height 0
+        if (parentNode === undefined) {
+          // root is leaf
+          if (!currNode.left && !currNode.right) {
+            this.root = null;
             return;
           }
-          if (parentNode.left === currNode) {
-            parentNode.data = currNode.data;
-            parentNode.left = null;
+
+          // root has one child
+          if (
+            (currNode.left && !currNode.right) ||
+            (currNode.right && !currNode.left)
+          ) {
+            let childNode = currNode.left ? currNode.left : currNode.right;
+            this.root = childNode;
             return;
           }
+
+          // root has two childs
         }
+
         // currNode is a leaf node
         if (!currNode.left && !currNode.right) {
-          if (parentNode.right === currNode) {
-            parentNode.right = null;
-            return;
-          }
-          if (parentNode.left === currNode) {
-            parentNode.left = null;
-            return;
-          }
+          parentNode.right === currNode
+            ? (parentNode.right = null)
+            : (parentNode.left = null);
+          return;
         }
+
+        // currNode has one child
+        if (
+          (currNode.left && !currNode.right) ||
+          (currNode.right && !currNode.left)
+        ) {
+          let childNode = currNode.left ? currNode.left : currNode.right;
+          parentNode.right === currNode
+            ? (parentNode.right = childNode)
+            : (parentNode.left = childNode);
+          return;
+        }
+
+        // currNode has two children
       }
 
       // continue traversing
