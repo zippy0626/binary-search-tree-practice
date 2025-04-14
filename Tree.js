@@ -76,6 +76,7 @@ export default class Tree {
 
   deleteItem(value) {
     // Deletes `value` in binary tree
+    // haven't handled root cases yet, where there is no parent
 
     if (value === undefined || value === null) {
       throw new Error("deleteItem value not provided");
@@ -89,6 +90,7 @@ export default class Tree {
       if (currNode.data === value) {
         checkIfLeaf(currNode, parentNode);
         checkIfOneChild(currNode, parentNode);
+        checkIfTwoChild(currNode)
         return;
       } else {
         parentNode = currNode;
@@ -99,14 +101,13 @@ export default class Tree {
         }
       }
     }
-
+    
     function checkIfLeaf(currNode, parentNode) {
       if (!currNode.left && !currNode.right) {
         parentNode.right === currNode
           ? (parentNode.right = null)
           : (parentNode.left = null);
       }
-      return true;
     }
 
     function checkIfOneChild(currNode, parentNode) {
@@ -114,19 +115,37 @@ export default class Tree {
         (!currNode.left && currNode.right) ||
         (!currNode.right && currNode.left)
       ) {
-        // check which side that parent has current node
-        // replace it with the child
-        if (parentNode.right === currNode) {
-          currNode.right
-            ? (parentNode.right = currNode.right)
-            : (parentNode.right = currNode.left);
+        // get the childNode of the current Node
+        // assign it to which side parent is
+        let childNode = currNode.left ? currNode.left : currNode.right;
+        parentNode.right === currNode
+          ? (parentNode.right = childNode)
+          : (parentNode.left = childNode);
+      }
+    }
+
+    function checkIfTwoChild(currNode) {
+      if (currNode.left && currNode.right) {
+        let successorParent = currNode;
+        let successor = currNode.right;
+
+        // find successor
+        while (successor.left) {
+          successorParent = successor;
+          successor = successor.left;
+        }
+
+        currNode.data = successor.data;
+
+        // delete the successor node
+        if (successorParent.left === successor) {
+          successorParent.left = successor.right;
         } else {
-          currNode.right
-            ? (parentNode.left = currNode.right)
-            : (parentNode.left = currNode.left);
+          successorParent.right = successor.right;
         }
       }
-      return true;
     }
+    console.log(`Value: ${value} not found in binary search tree.`)
+    return false;
   }
 }
