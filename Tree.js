@@ -76,71 +76,57 @@ export default class Tree {
 
   deleteItem(value) {
     // Deletes `value` in binary tree
-    // del leaf, del node with one child, del node with two childs
 
     if (value === undefined || value === null) {
       throw new Error("deleteItem value not provided");
     }
 
+    // `currNode` is the matched node
     let currNode = this.root;
     let parentNode;
 
     while (currNode) {
-      if (value === currNode.data) {
-        // deal with root level : height 0
-        if (parentNode === undefined) {
-          // root is leaf
-          if (!currNode.left && !currNode.right) {
-            this.root = null;
-            return;
-          }
-
-          // root has one child
-          if (
-            (currNode.left && !currNode.right) ||
-            (currNode.right && !currNode.left)
-          ) {
-            let childNode = currNode.left ? currNode.left : currNode.right;
-            this.root = childNode;
-            return;
-          }
-
-          // root has two childs
+      if (currNode.data === value) {
+        checkIfLeaf(currNode, parentNode);
+        checkIfOneChild(currNode, parentNode);
+        return;
+      } else {
+        parentNode = currNode;
+        if (value < currNode.data) {
+          currNode = currNode.left;
+        } else if (value > currNode.data) {
+          currNode = currNode.right;
         }
-
-        // currNode is a leaf node
-        if (!currNode.left && !currNode.right) {
-          parentNode.right === currNode
-            ? (parentNode.right = null)
-            : (parentNode.left = null);
-          return;
-        }
-
-        // currNode has one child
-        if (
-          (currNode.left && !currNode.right) ||
-          (currNode.right && !currNode.left)
-        ) {
-          let childNode = currNode.left ? currNode.left : currNode.right;
-          parentNode.right === currNode
-            ? (parentNode.right = childNode)
-            : (parentNode.left = childNode);
-          return;
-        }
-
-        // currNode has two children
-      }
-
-      // continue traversing
-      parentNode = currNode;
-      if (value < currNode.data) {
-        currNode = currNode.left;
-      } else if (value > currNode.data) {
-        currNode = currNode.right;
       }
     }
 
-    console.log(`Value: ${value} not found in binary tree.`);
-    return null;
+    function checkIfLeaf(currNode, parentNode) {
+      if (!currNode.left && !currNode.right) {
+        parentNode.right === currNode
+          ? (parentNode.right = null)
+          : (parentNode.left = null);
+      }
+      return true;
+    }
+
+    function checkIfOneChild(currNode, parentNode) {
+      if (
+        (!currNode.left && currNode.right) ||
+        (!currNode.right && currNode.left)
+      ) {
+        // check which side that parent has current node
+        // replace it with the child
+        if (parentNode.right === currNode) {
+          currNode.right
+            ? (parentNode.right = currNode.right)
+            : (parentNode.right = currNode.left);
+        } else {
+          currNode.right
+            ? (parentNode.left = currNode.right)
+            : (parentNode.left = currNode.left);
+        }
+      }
+      return true;
+    }
   }
 }
