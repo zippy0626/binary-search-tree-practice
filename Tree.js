@@ -90,7 +90,7 @@ export default class Tree {
       if (currNode.data === value) {
         checkIfLeaf(currNode, parentNode);
         checkIfOneChild(currNode, parentNode);
-        checkIfTwoChild(currNode)
+        checkIfTwoChild(currNode);
         return;
       } else {
         parentNode = currNode;
@@ -101,7 +101,7 @@ export default class Tree {
         }
       }
     }
-    
+
     function checkIfLeaf(currNode, parentNode) {
       if (!currNode.left && !currNode.right) {
         parentNode.right === currNode
@@ -145,7 +145,21 @@ export default class Tree {
         }
       }
     }
-    console.log(`Value: ${value} not found in binary search tree.`)
+    console.log(`Value: ${value} not found in binary search tree.`);
     return false;
+  }
+
+  find(value) {
+    if (value === undefined || value === null) {
+      throw new Error("find value not provided");
+    }
+    let currNode = this.root;
+    while (currNode.data !== value && (currNode.left || currNode.right)) {
+      value < currNode.data
+        ? (currNode = currNode.left)
+        : (currNode = currNode.right);
+    }
+    if (currNode.data !== value) return false;
+    return currNode;
   }
 }
