@@ -154,12 +154,13 @@ export default class Tree {
       throw new Error("find value not provided");
     }
     let currNode = this.root;
-    while (currNode.data !== value && (currNode.left || currNode.right)) {
+    if (!currNode) return false;
+    while (currNode) {
+      if (value === currNode.data) return currNode;
       value < currNode.data
         ? (currNode = currNode.left)
         : (currNode = currNode.right);
     }
-    if (currNode.data !== value) return false;
-    return currNode;
+    return false;
   }
 }
