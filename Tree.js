@@ -163,4 +163,47 @@ export default class Tree {
     }
     return false;
   }
+
+  levelOrder(callback, initialNode) {
+    // Write a levelOrder(callback) function that accepts a callback function and initialNode
+    // as its parameters. levelOrder should traverse the tree in breadth-first level order
+    // and call the callback on each node as it traverses, passing the
+    // whole node as an argument, similarly to how Array.prototype.forEach might work for arrays
+
+    if (!callback) {
+      throw new Error("A callback function is required.");
+    }
+    const queue = [];
+
+    // if `initialNode` is missing, use root
+    let currNode = initialNode ? initialNode : this.root;
+    if (!currNode) return;
+
+    // init queue
+    queue.push(currNode);
+
+    while (queue.length) {
+      let frontNode = queue.shift();
+      callback(frontNode);
+      if (frontNode.left) queue.push(frontNode.left);
+      if (frontNode.right) queue.push(frontNode.right);
+    }
+  }
+
+  preOrder(callback) {
+    // root, left, right
+
+  }
+
+  inOrder(callback) {
+    // left, root, right
+
+  }
+
+  postOrder(callback) {
+    // left, right, root
+
+  }
+
+
 }
