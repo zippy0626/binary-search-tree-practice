@@ -166,7 +166,7 @@ export default class Tree {
 
   levelOrder(callback, initialNode) {
     // Write a levelOrder(callback) function that accepts a callback function and initialNode
-    // as its parameters. levelOrder should traverse the tree in breadth-first level order
+    // as its parameters. levelOrder should traverse the tree in BREADTH-FIRST LEVEL ORDER
     // and call the callback on each node as it traverses, passing the
     // whole node as an argument, similarly to how Array.prototype.forEach might work for arrays
 
@@ -190,20 +190,37 @@ export default class Tree {
     }
   }
 
-  preOrder(callback) {
-    // root, left, right
-
+  preOrder(callback, node = this.root) {
+    // traverse as: root, left, right
+    if (!callback) {
+      throw new Error("A callback function is required.");
+    }
+    if (node === null) return;
+    callback(node)
+    this.preOrder(callback, node.left)
+    this.preOrder(callback, node.right)
   }
 
-  inOrder(callback) {
+  inOrder(callback, node = this.root) {
     // left, root, right
-
+    if (!callback) {
+      throw new Error("A callback function is required.");
+    }
+    if (node === null) return;
+    this.inOrder(callback, node.left)
+    callback(node)
+    this.inOrder(callback, node.right)
   }
 
-  postOrder(callback) {
+  postOrder(callback, node = this.root) {
     // left, right, root
-
+    if (!callback) {
+      throw new Error("A callback function is required.");
+    }
+    this.inOrder(callback, node.left)
+    this.inOrder(callback, node.right)
+    callback(node)
   }
 
 
-}
+} 
